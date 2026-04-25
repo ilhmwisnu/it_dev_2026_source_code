@@ -1,4 +1,5 @@
 import 'package:day_one_flutter_basic/add_mahasiswa_page.dart';
+import 'package:day_one_flutter_basic/dashboard_page.dart';
 import 'package:day_one_flutter_basic/detail_mahasiswa_page.dart';
 import 'package:day_one_flutter_basic/home_page.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +16,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+      theme: ThemeData(
+        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: false,
+      ),
       initialRoute: '/',
       routes: {
-        "/": (context) => HomePage(),
+        "/": (context) => Dashboard(),
         "/detail-page": (context) => DetailMahasiswaPage(),
         "/add-mahasiswa": (context) => AddMahasiswaPage(),
       },

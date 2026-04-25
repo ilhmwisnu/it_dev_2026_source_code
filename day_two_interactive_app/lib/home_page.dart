@@ -1,4 +1,3 @@
-import 'package:day_one_flutter_basic/data.dart';
 import 'package:day_one_flutter_basic/tile_mahasiswa_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -12,24 +11,52 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> data = [];
   bool isLoading = false;
+  String? errorMessage = null;
 
   void loadData() async {
-    setState(() {
-      isLoading = true;
-    });
+    try {
+      setState(() {
+        isLoading = true;
+        errorMessage = null;
+      });
 
-    await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(Duration(seconds: 5));
 
-    setState(() {
-      isLoading = false;
-      data = dataMahasiswa;
-    });
+      setState(() {
+        isLoading = false;
+        data = [];
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+        errorMessage = e.toString();
+      });
+      showError(e.toString());
+    }
   }
 
   @override
   void initState() {
     super.initState();
     loadData();
+  }
+
+  void showSuccess(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  void showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   @override
@@ -55,29 +82,45 @@ class _HomePageState extends State<HomePage> {
             setState(() {
               data.add(result);
             });
+
+            showSuccess("Data berhasil ditambahkan");
           }
         },
         child: Icon(Icons.add),
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) => GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    "/detail-page",
-                    arguments: data[index],
-                  );
-                },
-                child: TileMahasiswa(
-                  name: data[index]["name"],
-                  nim: data[index]['nim'],
-                  ipk: data[index]["ipk"],
-                ),
+      body: Builder(
+        builder: (context) {
+          if (isLoading) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (errorMessage != null) {
+            return Center(child: Text(errorMessage!));
+          }
+
+          if (data.isEmpty) {
+            return Center(child: Text("Data kosong"));
+          }
+
+          return ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (context, index) => GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  "/detail-page",
+                  arguments: data[index],
+                );
+              },
+              child: TileMahasiswa(
+                name: data[index]["name"],
+                nim: data[index]['nim'],
+                ipk: data[index]["ipk"],
               ),
             ),
+          );
+        },
+      ),
     );
   }
 }
