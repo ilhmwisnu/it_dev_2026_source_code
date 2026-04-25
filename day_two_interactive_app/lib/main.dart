@@ -1,3 +1,4 @@
+import 'package:day_one_flutter_basic/add_mahasiswa_page.dart';
 import 'package:day_one_flutter_basic/detail_mahasiswa_page.dart';
 import 'package:day_one_flutter_basic/home_page.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => HomePage(),
         "/detail-page": (context) => DetailMahasiswaPage(),
+        "/add-mahasiswa": (context) => AddMahasiswaPage(),
       },
     );
   }
