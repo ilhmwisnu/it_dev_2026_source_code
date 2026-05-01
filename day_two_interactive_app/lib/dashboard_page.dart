@@ -1,3 +1,4 @@
+import 'package:day_one_flutter_basic/counter_page.dart';
 import 'package:day_one_flutter_basic/home_page.dart';
 import 'package:day_one_flutter_basic/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +15,12 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    print("Build !!!");
+
     return Scaffold(
       body: IndexedStack(
         index: pageIndex,
-        children: [HomePage(), ProfilePage()],
+        children: [HomePage(), ProfilePage(), CounterPage()],
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (value) {
@@ -29,6 +32,7 @@ class _DashboardState extends State<Dashboard> {
         destinations: [
           NavigationDestination(icon: Icon(Icons.home), label: "home"),
           NavigationDestination(icon: Icon(Icons.person), label: "profile"),
+          NavigationDestination(icon: Icon(Icons.numbers), label: "Counter"),
         ],
       ),
     );
