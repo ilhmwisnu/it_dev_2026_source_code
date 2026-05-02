@@ -1,7 +1,8 @@
+import 'package:day_three_integrate_backend/models/user.dart';
 import 'package:flutter/material.dart';
 
 class UserFormScreen extends StatefulWidget {
-  final Map<String, dynamic>? user;
+  final UserData? user;
 
   const UserFormScreen({super.key, this.user});
 
@@ -20,9 +21,9 @@ class _UserFormScreenState extends State<UserFormScreen> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.user?['name'] ?? '');
-    _emailController = TextEditingController(text: widget.user?['email'] ?? '');
-    _avatarController = TextEditingController(text: widget.user?['avatar'] ?? '');
+    _nameController = TextEditingController(text: widget.user?.name);
+    _emailController = TextEditingController(text: widget.user?.email);
+    _avatarController = TextEditingController(text: widget.user?.avatar);
   }
 
   @override
@@ -38,7 +39,11 @@ class _UserFormScreenState extends State<UserFormScreen> {
     // TODO: call POST /api/users or PUT /api/users/:id
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(_isEditMode ? 'User updated successfully' : 'User created successfully'),
+        content: Text(
+          _isEditMode
+              ? 'User updated successfully'
+              : 'User created successfully',
+        ),
       ),
     );
     Navigator.pop(context);
@@ -62,7 +67,8 @@ class _UserFormScreenState extends State<UserFormScreen> {
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.person),
                 ),
-                validator: (v) => (v == null || v.isEmpty) ? 'Name is required' : null,
+                validator: (v) =>
+                    (v == null || v.isEmpty) ? 'Name is required' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(

@@ -1,3 +1,4 @@
+import 'package:day_three_integrate_backend/screens/users_screen.dart';
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 
@@ -16,7 +17,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
       ),
-      home: const LoginScreen(),
+      initialRoute: "/login",
+      routes: {
+        "/login": (context) => LoginScreen(),
+        "/home": (context) => UsersScreen(),
+      },
     );
   }
 }

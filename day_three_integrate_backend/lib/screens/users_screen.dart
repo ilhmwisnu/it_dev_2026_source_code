@@ -1,46 +1,44 @@
+import 'package:day_three_integrate_backend/models/user.dart';
+import 'package:day_three_integrate_backend/services/service.dart';
 import 'package:flutter/material.dart';
 import 'user_detail_screen.dart';
 import 'user_form_screen.dart';
 import 'profile_screen.dart';
 
-final _allUsers = List.generate(
-  12,
-  (i) => {
-    'id': i + 1,
-    'name': [
-      'John Doe',
-      'Jane Smith',
-      'Alice Walker',
-      'Bob Martin',
-      'Carol White',
-      'David Lee',
-      'Eva Green',
-      'Frank Brown',
-      'Grace Kim',
-      'Henry Wilson',
-      'Isla Scott',
-      'Jack Taylor',
-    ][i],
-    'email': [
-      'john.doe@example.com',
-      'jane.smith@example.com',
-      'alice.walker@example.com',
-      'bob.martin@example.com',
-      'carol.white@example.com',
-      'david.lee@example.com',
-      'eva.green@example.com',
-      'frank.brown@example.com',
-      'grace.kim@example.com',
-      'henry.wilson@example.com',
-      'isla.scott@example.com',
-      'jack.taylor@example.com',
-    ][i],
-    'avatar': 'https://picsum.photos/id/${i + 1}/200/200',
-  },
-);
-
-class UsersScreen extends StatelessWidget {
+class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
+
+  @override
+  State<UsersScreen> createState() => _UsersScreenState();
+}
+
+class _UsersScreenState extends State<UsersScreen> {
+  bool isLoading = false;
+  List<UserData> users = [];
+
+  Future<void> load() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      final data = await service.getUsers();
+
+      setState(() {
+        users = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    load();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,16 +58,14 @@ class UsersScreen extends StatelessWidget {
       ),
       body: ListView.separated(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        itemCount: _allUsers.length,
+        itemCount: users.length,
         separatorBuilder: (_, _) => const Divider(height: 1),
         itemBuilder: (_, i) {
-          final user = _allUsers[i];
+          final user = users[i];
           return ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(user['avatar'] as String),
-            ),
-            title: Text(user['name'] as String),
-            subtitle: Text(user['email'] as String),
+            leading: CircleAvatar(backgroundImage: NetworkImage(user.avatar)),
+            title: Text(user.name),
+            subtitle: Text(user.email),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.push(
               context,

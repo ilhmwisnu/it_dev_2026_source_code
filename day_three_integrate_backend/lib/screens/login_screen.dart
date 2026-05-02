@@ -1,3 +1,4 @@
+import 'package:day_three_integrate_backend/services/service.dart';
 import 'package:flutter/material.dart';
 import 'register_screen.dart';
 import 'users_screen.dart';
@@ -13,6 +14,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -21,13 +23,35 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _onLogin() {
+  void _onLogin() async {
     if (!_formKey.currentState!.validate()) return;
-    // TODO: call POST /api/login
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const UsersScreen()),
-    );
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      await service.login(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
+      await Future.delayed(Duration(seconds: 1));
+
+      setState(() {
+        isLoading = false;
+      });
+
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, "/home");
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Error")));
+      }
+    }
   }
 
   @override
@@ -80,7 +104,9 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 24),
               FilledButton(
                 onPressed: _onLogin,
-                child: const Text('Login'),
+                child: isLoading
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : const Text('Login'),
               ),
               const SizedBox(height: 16),
               TextButton(

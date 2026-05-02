@@ -1,8 +1,9 @@
+import 'package:day_three_integrate_backend/models/user.dart';
 import 'package:flutter/material.dart';
 import 'user_form_screen.dart';
 
 class UserDetailScreen extends StatelessWidget {
-  final Map<String, dynamic> user;
+  final UserData user;
 
   const UserDetailScreen({super.key, required this.user});
 
@@ -11,7 +12,7 @@ class UserDetailScreen extends StatelessWidget {
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Delete User'),
-        content: Text('Are you sure you want to delete ${user['name']}?'),
+        content: Text('Are you sure you want to delete ${user.name}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -35,10 +36,10 @@ class UserDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name = user['name'] as String;
-    final email = user['email'] as String;
-    final avatar = user['avatar'] as String;
-    final id = user['id'];
+    final name = user.name;
+    final email = user.email;
+    final avatar = user.avatar;
+    final id = user.id;
 
     return Scaffold(
       appBar: AppBar(
